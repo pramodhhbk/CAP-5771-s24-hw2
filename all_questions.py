@@ -24,13 +24,13 @@ def question1():
     level2_right = {}
 
     level1["smoking"] = 1.0
-    level1["smoking_info_gain"] = 0.2781
+    level1["smoking_info_gain"] = 0.2780
 
     level1["cough"] = -1.0
-    level1["cough_info_gain"] = 0.2365
+    level1["cough_info_gain"] = 0.0348
 
     level1["radon"] = -1.0
-    level1["radon_info_gain"] = 0.0350
+    level1["radon_info_gain"] = 0.2364
 
     level1["weight_loss"] = -1.0
     level1["weight_loss_info_gain"] = 0.0291
@@ -85,18 +85,31 @@ def question2():
     answer = {}
 
     # Answers are floats
-    answer["(a) entropy_entire_data"] = 0.
+    answer["(a) entropy_entire_data"] = 1.4253
     # Infogain
-    answer["(b) x < 0.2"] = 0.
-    answer["(b) x < 0.7"] = 0.
-    answer["(b) y < 0.6"] = 0.
+    answer["(b) x < 0.2"] = 0.1774
+    answer["(b) x < 0.7"] = 0.355
+    answer["(b) y < 0.6"] = 0.347
 
     # choose one of 'x=0.2', 'x=0.7', or 'x=0.6'
-    answer["(c) attribute"] = ""  
+    answer["(c) attribute"] = "x<=0.7"  
 
     # Use the Binary Tree structure to construct the tree
     # Answer is an instance of BinaryTree
-    tree = u.BinaryTree("Root")
+    
+    tree = u.BinaryTree("x<=0.7")
+    A=tree.insert_left("y<=0.6")
+    A.insert_left("B")
+    C=A.insert_right("x<=0.2")
+    D=C.insert_left("y<=0.8")
+    C.insert_right("A")
+    D.insert_left("C")
+    D.insert_right("B")
+    B=tree.insert_right("y<=0.6")
+    E=B.insert_left("y<=0.3")
+    B.insert_right("A")
+    E.insert_left("A")
+    E.insert_right("C")
     answer["(d) full decision tree"] = tree
 
     return answer
@@ -114,7 +127,7 @@ def question3():
     # float
     answer["(b) Gini, ID"] = 0.0
     answer["(c) Gini, Gender"] = 0.48
-    answer["(d) Gini, Car type"] = 0.1622
+    answer["(d) Gini, Car type"] = 0.1625
     answer["(e) Gini, Shirt type"] = 0.4914
 
     answer["(f) attr for splitting"] = "Car type"
@@ -204,8 +217,8 @@ def question5():
     explain["c similarity"] = "Penalty on Complexity / Regularization"
     explain["c similarity explain"] = "They are similar, since they penalize the complexity of the model"
 
-    explain["c difference"] = ""
-    explain["c difference explain"] = ""
+    explain["c difference"] = "Specificity"
+    explain["c difference explain"] = "MDL seeks a model with a low bit count for description, while pessimistic error tries to minimize tree error in order to prevent complicated decision trees."
 
     return explain
 
@@ -219,21 +232,25 @@ def question6():
     # value of the form "z <= float" where "z" is "x" or "y"
     #  and "float" is a floating point number (notice: <=)
     # The value could also be "A" or "B" if it is a leaf
-    answer["a, level 1"] = ""
-    answer["a, level 2, right"] =""
-    answer["a, level 2, left"] = ""
-    answer["a, level 3, left"] = ""
-    answer["a, level 3, right"] = ""
+    answer["a, level 1"] = "x<=0.5"
+    answer["a, level 2, right"] ="A"
+    answer["a, level 2, left"] = "y<=0.4"
+    answer["a, level 3, left"] = "A"
+    answer["a, level 3, right"] = "B"
 
     # run each datum through the tree. Count the number of errors and divide by number of samples. .
     # Since we have areas: calculate the area that is misclassified (total area is unity)
     # float between 0 and 1
-    answer["b, expected error"] = 0.
-
+    answer["b, expected error"] = 0.06
+    #Misclassification happens in the A where x<=0.2 and y>=0.7 and y<=1.0
+    #Thus the area is 0.06 which is the misclassification error
     # Use u.BinaryTree to define the tree. Create your tree.
     # Replace "root node" by the proper node of the form "z <= float"
-    tree = u.BinaryTree("root note")
-
+    tree = u.BinaryTree("x<=0.5")
+    left = tree.insert_left("y<=0.4")
+    right = tree.insert_right("A")
+    left.insert_left("A")
+    left.insert_right("B")
     answer["c, tree"] = tree
 
     return answer
